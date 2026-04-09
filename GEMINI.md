@@ -1,12 +1,12 @@
-# CLAUDE.md
+# GEMINI.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Antigravity (antigravity.google) when working with code in this repository.
 
 ## What This Repo Is
 
-This repo generates and manages a Claude Code skill for the **Ant Design Vue** component library. The skill provides task-oriented guidance (not just raw API docs) — organized by what developers actually need: forms, tables, layouts, modals, theming, etc.
+This repo generates and manages an agent skill for the **Ant Design Vue** component library. The skill provides task-oriented guidance (not just raw API docs) — organized by what developers actually need: forms, tables, layouts, modals, theming, etc.
 
-The generated skill lives in `.claude/skills/antdv/` and is automatically loaded by Claude when working with Ant Design Vue code.
+The generated skill lives in `.agents/skills/antdv/` and is automatically loaded by Antigravity when working with Ant Design Vue code.
 
 ## Key Command
 
@@ -16,12 +16,12 @@ The generated skill lives in `.claude/skills/antdv/` and is automatically loaded
 pnpm run generate:antdv
 ```
 
-This reads `repos/ant-design-vue/` (a cloned copy of vueComponent/ant-design-vue) and writes to both `.claude/skills/antdv/` and `.agents/skills/antdv/`.
+This reads `repos/ant-design-vue/` (a cloned copy of vueComponent/ant-design-vue) and writes to both `.agents/skills/antdv/` and `.claude/skills/antdv/`.
 
 ## Generated Output Structure
 
 ```
-.claude/skills/antdv/
+.agents/skills/antdv/
 ├── SKILL.md                          # Skill manifest: quick start, key patterns table, common pitfalls
 ├── GENERATION.md                     # Source SHA and generation stats
 └── references/
@@ -53,7 +53,7 @@ The generation pipeline is `scripts/generate-antdv-skill.ts`:
 6. **SKILL.md generator** — concise guide with quick start, patterns table, and pitfalls
 
 Key design decisions:
-- References are organized by **developer task** (not per-component) — Claude knows when/how to use patterns, not just what props exist
+- References are organized by **developer task** (not per-component) — the agent knows when/how to use patterns, not just what props exist
 - Demos are **inlined** into task references (2-5 curated per group) rather than stored as separate files
 - `api/` subdirectory provides **compact per-component lookup** as a secondary layer
 - Groupings config (`GROUPS` array in the script) is ~200 lines and only changes when new components are added upstream

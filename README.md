@@ -1,6 +1,8 @@
 # antdv-skills
 
-A Claude Code skill generator for the [Ant Design Vue](https://github.com/vueComponent/ant-design-vue) component library. Produces task-oriented guidance organized by what developers actually need — forms, tables, layouts, modals, theming, and more.
+An agent skill generator for the [Ant Design Vue](https://github.com/vueComponent/ant-design-vue) component library. Produces task-oriented guidance organized by what developers actually need — forms, tables, layouts, modals, theming, and more.
+
+Compatible with Antigravity (`.agents/skills/`) and Claude Code (`.claude/skills/`).
 
 ## Setup
 
@@ -17,7 +19,7 @@ Generate the skill:
 pnpm run generate:antdv
 ```
 
-This reads `repos/ant-design-vue/` and writes the skill to `.claude/skills/antdv/`.
+This reads `repos/ant-design-vue/` and writes the skill to both `.claude/skills/antdv/` and `.agents/skills/antdv/`.
 
 ## Output Structure
 
