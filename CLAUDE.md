@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This repo generates and manages a Claude Code skill for the **Ant Design Vue** component library. The skill provides task-oriented guidance (not just raw API docs) — organized by what developers actually need: forms, tables, layouts, modals, theming, etc.
 
-The generated skill lives in `.claude/skills/antdv/` and is automatically loaded by Claude when working with Ant Design Vue code.
+The generated skill lives in `skills/antdv/` and is symlinked to `.claude/skills/` and `.agents/skills/` for agent compatibility.
 
 ## Key Command
 
@@ -16,12 +16,12 @@ The generated skill lives in `.claude/skills/antdv/` and is automatically loaded
 pnpm run generate:antdv
 ```
 
-This reads `repos/ant-design-vue/` (a cloned copy of vueComponent/ant-design-vue) and writes to both `.claude/skills/antdv/` and `.agents/skills/antdv/`.
+This reads `repos/ant-design-vue/` (a cloned copy of vueComponent/ant-design-vue) and writes to `skills/antdv/`.
 
 ## Generated Output Structure
 
 ```
-.claude/skills/antdv/
+skills/antdv/
 ├── SKILL.md                          # Skill manifest: quick start, key patterns table, common pitfalls
 ├── GENERATION.md                     # Source SHA and generation stats
 └── references/

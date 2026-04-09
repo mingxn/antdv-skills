@@ -6,28 +6,24 @@ import matter from 'gray-matter'
 
 // ─── CLI args ───────────────────────────────────────────────────────────────
 
-const DEFAULT_OUTPUTS = ['.claude/skills/antdv', '.agents/skills/antdv']
+const REMOTE_URL = 'https://github.com/vueComponent/ant-design-vue.git'
+const DEFAULT_REPO = 'repos/ant-design-vue'
 
 const { values: args } = parseArgs({
   options: {
-    repo: { type: 'string' },
+    repo: { type: 'string', default: DEFAULT_REPO },
     lang: { type: 'string', default: 'en' },
-    out: { type: 'string', multiple: true },
+    out: { type: 'string', default: 'skills/antdv' },
   },
 })
 
-if (!args.repo) {
-  console.error('Usage: tsx scripts/generate-antdv-skill.ts --repo <path-to-ant-design-vue> [--out <dir> ...]')
-  process.exit(1)
-}
-
-const REPO = resolve(args.repo)
-const OUTPUTS = (args.out && args.out.length > 0 ? args.out : DEFAULT_OUTPUTS).map(o => resolve(o))
+const REPO = resolve(args.repo!)
+const OUT = resolve(args.out!)
 const LANG_SUFFIX = 'en-US'
 
 if (!existsSync(REPO)) {
-  console.error(`Repo not found: ${REPO}`)
-  process.exit(1)
+  console.log(`Repo not found at ${REPO}, cloning from ${REMOTE_URL}...`)
+  execSync(`git clone --depth 1 ${REMOTE_URL} ${REPO}`, { stdio: 'inherit' })
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -899,7 +895,6 @@ Use via \`<a-config-provider :theme="{ token: { ... } }">\`.
 // ─── GENERATION.md ──────────────────────────────────────────────────────────
 
 function generateGenerationMd(
-  repoPath: string,
   gitSha: string,
   generatedDate: string,
   stats: {
@@ -911,7 +906,7 @@ function generateGenerationMd(
 ): string {
   return `# Generation Info
 
-- Source: \`${repoPath}\`
+- Source: ${REMOTE_URL.replace(/\.git$/, '')}
 - Git SHA: \`${gitSha}\`
 - Generated: ${generatedDate}
 - Language: en-US
@@ -930,7 +925,11 @@ function main() {
 
   console.log(`Source: ${REPO}`)
   console.log(`Git SHA: ${gitSha}`)
-  console.log(`Outputs: ${OUTPUTS.join(', ')}`)
+  console.log(`Output: ${OUT}`)
+
+  // Clean and recreate output dir
+  rmSync(join(OUT, 'references'), { recursive: true, force: true })
+  mkdirp(join(OUT, 'references', 'api'))
 
   // 1. Discover and parse all components
   const componentNames = discoverComponents(REPO)
@@ -948,70 +947,56 @@ function main() {
     }
   }
 
-  // 2. Generate all content in memory
-  const taskRefs = new Map<string, string>()
+  // 2. Generate task-oriented reference files
   for (const group of GROUPS) {
     console.log(`  Generating reference: ${group.slug}`)
-    taskRefs.set(group.slug, generateTaskReference(group, componentDataMap))
+    const content = generateTaskReference(group, componentDataMap)
+    writeFileSync(join(OUT, 'references', `${group.slug}.md`), content)
   }
   console.log(`Generated ${GROUPS.length} task-oriented references`)
 
-  const apiRefs = new Map<string, string>()
+  // 3. Generate compact API reference files
+  let apiCount = 0
   for (const name of componentNames) {
     const data = componentDataMap.get(name)!
     const tokens = componentTokensMap.get(name) || []
-    apiRefs.set(name, generateApiReference(data, tokens))
+    const content = generateApiReference(data, tokens)
+    writeFileSync(join(OUT, 'references', 'api', `${name}.md`), content)
+    apiCount++
   }
-  console.log(`Generated ${apiRefs.size} API reference files`)
+  console.log(`Generated ${apiCount} API reference files`)
 
-  const specialRefs = {
-    'getting-started': generateGettingStartedMd(REPO),
-    'theming-overview': generateThemingOverviewMd(REPO),
-    'i18n': generateI18nMd(REPO),
-  }
+  // 4. Generate special reference files
+  writeFileSync(join(OUT, 'references', 'getting-started.md'), generateGettingStartedMd(REPO))
+  writeFileSync(join(OUT, 'references', 'theming-overview.md'), generateThemingOverviewMd(REPO))
+  writeFileSync(join(OUT, 'references', 'i18n.md'), generateI18nMd(REPO))
 
+  // 5. Global tokens
   const globalTokens = extractGlobalTokens(REPO)
   const hasGlobalTokens = globalTokens.length > 0
-  const globalTokenMd = hasGlobalTokens ? generateGlobalTokenMd(globalTokens) : null
-  if (hasGlobalTokens) console.log(`Extracted ${globalTokens.length} global tokens`)
+  if (hasGlobalTokens) {
+    writeFileSync(join(OUT, 'references', 'theming-tokens.md'), generateGlobalTokenMd(globalTokens))
+    console.log(`Extracted ${globalTokens.length} global tokens`)
+  }
 
+  // 6. Generate SKILL.md
   const skillMd = generateSkillMd(GROUPS, hasGlobalTokens, generatedDate)
-  const genMd = generateGenerationMd(REPO, gitSha, generatedDate, {
+  writeFileSync(join(OUT, 'SKILL.md'), skillMd)
+
+  // 7. Generate GENERATION.md
+  const genMd = generateGenerationMd(gitSha, generatedDate, {
     components: componentNames.length,
     taskReferences: GROUPS.length,
-    apiFiles: apiRefs.size,
+    apiFiles: apiCount,
     globalTokens: globalTokens.length,
   })
-
-  // 3. Write to each output directory
-  for (const out of OUTPUTS) {
-    console.log(`\nWriting to: ${out}`)
-
-    rmSync(join(out, 'references'), { recursive: true, force: true })
-    mkdirp(join(out, 'references', 'api'))
-
-    for (const [slug, content] of taskRefs) {
-      writeFileSync(join(out, 'references', `${slug}.md`), content)
-    }
-    for (const [name, content] of apiRefs) {
-      writeFileSync(join(out, 'references', 'api', `${name}.md`), content)
-    }
-    for (const [name, content] of Object.entries(specialRefs)) {
-      writeFileSync(join(out, 'references', `${name}.md`), content)
-    }
-    if (globalTokenMd) {
-      writeFileSync(join(out, 'references', 'theming-tokens.md'), globalTokenMd)
-    }
-    writeFileSync(join(out, 'SKILL.md'), skillMd)
-    writeFileSync(join(out, 'GENERATION.md'), genMd)
-  }
+  writeFileSync(join(OUT, 'GENERATION.md'), genMd)
 
   console.log('\nDone!')
   console.log(`  Components: ${componentNames.length}`)
   console.log(`  Task references: ${GROUPS.length}`)
-  console.log(`  API files: ${apiRefs.size}`)
+  console.log(`  API files: ${apiCount}`)
   if (hasGlobalTokens) console.log(`  Global tokens: ${globalTokens.length}`)
-  console.log(`  Output dirs: ${OUTPUTS.length}`)
 }
 
 main()

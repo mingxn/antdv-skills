@@ -1,40 +1,63 @@
-# antdv-skills
+# Ant Design Vue Skills
 
-An agent skill generator for the [Ant Design Vue](https://github.com/vueComponent/ant-design-vue) component library. Produces task-oriented guidance organized by what developers actually need — forms, tables, layouts, modals, theming, and more.
+Agent skills that help AI agents understand and work with [Ant Design Vue](https://antdv.com) 4.x component library for Vue 3.
 
-Compatible with Antigravity (`.agents/skills/`) and Claude Code (`.claude/skills/`).
-
-## Setup
+## Installation
 
 ```bash
-pnpm install
-git clone https://github.com/vueComponent/ant-design-vue.git repos/ant-design-vue
+npx skills add mingxn/antdv-skills
 ```
+
+This will add the Ant Design Vue skill to your agent configuration.
+
+## What's Included
+
+The antdv skill provides agents with knowledge about:
+
+- **Forms & Validation** - Form layout, validation rules, dynamic fields, useForm composition API
+- **Data Tables** - Sorting, filtering, pagination, row selection, editable cells, virtual scroll
+- **Layouts** - Page structure with Header/Sider/Content/Footer, 24-column grid, Flex, Space
+- **Navigation** - Menu, Breadcrumb, Dropdown, Steps, Pagination, Anchor
+- **Selection Components** - Select, Cascader, TreeSelect, Transfer
+- **Date & Time Pickers** - DatePicker, TimePicker, RangePicker, Calendar
+- **Feedback** - Modal, Drawer, Message, Notification, Alert, Popconfirm
+- **Theming** - Design tokens, dark mode, ConfigProvider, component-level tokens
+- **68 Component APIs** - Compact per-component reference (props, events, slots)
 
 ## Usage
 
-Generate the skill:
+Once installed, agents will automatically use Ant Design Vue knowledge when:
 
-```bash
-pnpm run generate:antdv
+- Building forms with validation
+- Creating data tables with sorting and filtering
+- Setting up page layouts with sidebars
+- Configuring themes and dark mode
+- Working with any Ant Design Vue component
+
+### Example Prompts
+
+```
+Create a login form with email and password validation using Ant Design Vue
 ```
 
-This reads `repos/ant-design-vue/` and writes the skill to both `.claude/skills/antdv/` and `.agents/skills/antdv/`.
+```
+Build a data table with sortable columns, row selection, and pagination
+```
 
-## Output Structure
+```
+Set up a sidebar layout with a collapsible menu
+```
 
-The generated skill includes:
+```
+Configure a dark theme with custom primary color
+```
 
-- **SKILL.md** — Skill manifest with quick start, key patterns, and common pitfalls
-- **references/** — Task-oriented guides (forms, tables, modals, layout, etc.) with curated demos
-- **references/api/** — Compact per-component API reference (props, events, slots)
+## Documentation
 
-## How It Works
+- [Ant Design Vue Docs](https://antdv.com)
+- [Component Gallery](https://antdv.com/components/overview)
+- [GitHub](https://github.com/vueComponent/ant-design-vue)
 
-The generation pipeline (`scripts/generate-antdv-skill.ts`):
+## License
 
-1. Discovers components from the upstream repo's `components/` directory
-2. Groups 68 components into ~17 task-oriented categories
-3. Generates task references with "When to Use" guidance and curated demos
-4. Extracts compact API references (props/events/slots only)
-5. Produces special references for getting started, theming, and i18n
+MIT

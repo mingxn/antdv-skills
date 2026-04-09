@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "generate:antdv": "tsx scripts/generate-antdv-skill.ts --repo repos/ant-design-vue"
+    "generate:antdv": "tsx scripts/generate-antdv-skill.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.0",
