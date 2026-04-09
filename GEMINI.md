@@ -6,7 +6,7 @@ This file provides guidance to Antigravity (antigravity.google) when working wit
 
 This repo generates and manages an agent skill for the **Ant Design Vue** component library. The skill provides task-oriented guidance (not just raw API docs) — organized by what developers actually need: forms, tables, layouts, modals, theming, etc.
 
-The generated skill lives in `.agents/skills/antdv/` and is automatically loaded by Antigravity when working with Ant Design Vue code.
+The generated skill lives in `skills/antdv/` and is symlinked to `.agents/skills/` and `.claude/skills/` for agent compatibility.
 
 ## Key Command
 
@@ -16,12 +16,12 @@ The generated skill lives in `.agents/skills/antdv/` and is automatically loaded
 pnpm run generate:antdv
 ```
 
-This reads `repos/ant-design-vue/` (a cloned copy of vueComponent/ant-design-vue) and writes to both `.agents/skills/antdv/` and `.claude/skills/antdv/`.
+This reads `repos/ant-design-vue/` (a cloned copy of vueComponent/ant-design-vue) and writes to `skills/antdv/`.
 
 ## Generated Output Structure
 
 ```
-.agents/skills/antdv/
+skills/antdv/
 ├── SKILL.md                          # Skill manifest: quick start, key patterns table, common pitfalls
 ├── GENERATION.md                     # Source SHA and generation stats
 └── references/
