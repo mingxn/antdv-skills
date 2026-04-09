@@ -2,3 +2,7 @@ node_modules/
 repos/
 lancedb/
 *.tsbuildinfo
+
+.agents/
+.claude/
+tests/
