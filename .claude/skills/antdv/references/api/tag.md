@@ -1,0 +1,52 @@
+---
+name: tag
+description: Tag - Tag for categorizing or markup.
+---
+
+# Tag
+
+Tag for categorizing or markup.
+
+## API
+
+### Tag
+
+| Property  | Description                   | Type          | Default | Version |
+| --------- | ----------------------------- | ------------- | ------- | ------- |
+| closable  | Whether the Tag can be closed | boolean       | `false` |         |
+| closeIcon | Custom close icon             | VNode \| slot | -       | 2.0.0   |
+| color     | Color of the Tag              | string        | -       |         |
+| icon      | Set the icon of tag           | VNode \| slot | -       | 2.0.0   |
+| bordered  | Whether has border style      | boolean       | `true`  | 4.x     |
+
+### Tag Events
+
+| Events Name | Description                          | Arguments   |
+| ----------- | ------------------------------------ | ----------- |
+| close       | Callback executed when tag is closed | (e) => void |
+
+### Tag.CheckableTag
+
+| Property         | Description           | Type    | Default |
+| ---------------- | --------------------- | ------- | ------- |
+| checked(v-model) | Checked status of Tag | boolean | `false` |
+
+### Tag.CheckableTag Events
+
+| Events Name | Description                                     | Arguments         |
+| ----------- | ----------------------------------------------- | ----------------- |
+| change      | Callback executed when Tag is checked/unchecked | (checked) => void |
+
+## Theme Tokens
+
+Use via `theme.components.Tag` in ConfigProvider.
+
+| Token | Type | Description |
+| --- | --- | --- |
+| `tagFontSize` | `number` | - |
+| `tagLineHeight` | `CSSProperties['lineHeight']` | - |
+| `tagDefaultBg` | `string` | - |
+| `tagDefaultColor` | `string` | - |
+| `tagIconSize` | `number` | - |
+| `tagPaddingHorizontal` | `number` | - |
+| `tagBorderlessBg` | `string` | - |

@@ -1,0 +1,15 @@
+{
+  "name": "antdv-skills",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:antdv": "tsx scripts/generate-antdv-skill.ts --repo repos/ant-design-vue"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "gray-matter": "^4.0.3",
+    "glob": "^11.0.0",
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0"
+  }
+}
